@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000
 
 //const {generateMessage} = require('./utils/message') 等於下一行
 const generateMessage = require('./utils/message').generateMessage
+const generateLocationMessage = require('./utils/message').generateLocationMessage
 
 var app = express();
 var server = http.createServer(app)
@@ -28,12 +29,10 @@ io.on('connection', (socket) => {
 
     io.emit('newMessage', generateMessage(message.from, message.text))
     callback('this is from server')
-    // socket.broadcast.emit('newMessage',{
-    //   from: message.from,
-    //   text: message.text,
-    //   createAt: new Date().getTime()
-    // })
+  })
 
+  socket.on('createLocationMessage', (coords) => {
+    io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude))
   })
 
   socket.on('disconnect', () => {
