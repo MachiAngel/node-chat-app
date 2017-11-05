@@ -5,9 +5,6 @@ const express = require('express')
 const socketIO = require('socket.io')
 const port = process.env.PORT || 3000
 
-
-
-
 var app = express();
 var server = http.createServer(app)
 var io = socketIO(server)
@@ -30,9 +27,14 @@ io.on('connection', (socket) => {
     console.log('client disconnect to server');
   })
 
-
+  //server端收到client端給的訊息
   socket.on('createMessage', (message) => {
-    console.log('createMessage:',message)
+    console.log('createMessage from client:',message)
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createAt: message.createAt
+    })
   })
 
 
