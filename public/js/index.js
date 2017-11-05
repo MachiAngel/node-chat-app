@@ -4,11 +4,11 @@ socket.on('connect', function() {
   console.log('Connected to server')
 
   //連線成功後 發訊息
-  socket.emit('createMessage',{
-    to:'tim',
-    text:'安安 你好',
-    createAt: new Date().getTime()
-  })
+  // socket.emit('createMessage',{
+  //   to:'tim',
+  //   text:'安安 你好',
+  //   createAt: new Date().getTime()
+  // })
 
 })
 

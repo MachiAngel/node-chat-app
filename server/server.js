@@ -13,18 +13,17 @@ app.use(express.static(publicPath))
 
 
 io.on('connection', (socket) => {
-  console.log('New user connected');
+  console.log('New user connected')
 
-  //送出
-  socket.emit('newMessage', {
-    from:'angel',
-    text:'long time no see',
-    createAt:123
+  socket.emit('newMessage',{
+    from: 'admin',
+    text: 'Welcome to chat app'
   })
 
-
-  socket.on('disconnect', () => {
-    console.log('client disconnect to server');
+  socket.broadcast.emit('newMessage',{
+    from: 'admin',
+    text: 'New user joined',
+    createAt: new Date().getTime()
   })
 
   //server端收到client端給的訊息
@@ -33,8 +32,19 @@ io.on('connection', (socket) => {
     io.emit('newMessage', {
       from: message.from,
       text: message.text,
-      createAt: message.createAt
+      createAt: new Date().getTime()
     })
+
+    // socket.broadcast.emit('newMessage',{
+    //   from: message.from,
+    //   text: message.text,
+    //   createAt: new Date().getTime()
+    // })
+
+  })
+
+  socket.on('disconnect', () => {
+    console.log('client disconnect to server');
   })
 
 
