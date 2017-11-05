@@ -23,11 +23,11 @@ io.on('connection', (socket) => {
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'))
 
   //server端收到client端給的訊息
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message, callback) => {
     console.log('createMessage from client:',message)
-    
-    io.emit('newMessage', generateMessage(message.from, message.text))
 
+    io.emit('newMessage', generateMessage(message.from, message.text))
+    callback('this is from server')
     // socket.broadcast.emit('newMessage',{
     //   from: message.from,
     //   text: message.text,
