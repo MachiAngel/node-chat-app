@@ -1,14 +1,23 @@
 var socket = io();
 
+function scrollToBottom(){
+  //Selectors
+  var messages = $('#messages')
+  var newMessage = messages.children('li:last-child')
+  //Heights
+  var clientHeight = messages.prop('clientHeight')
+  var scrollTop = messages.prop('scrollTop')
+  var scrollHeight = messages.prop('scrollHeight')
+  var newMessageHeight = newMessage.innerHeight()
+  var lastMessageHeight = newMessage.prev().innerHeight()
+
+  if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    messages.scrollTop(scrollHeight)
+  }
+}
+
 socket.on('connect', function() {
   console.log('Connected to server')
-
-  //連線成功後 發訊息
-  // socket.emit('createMessage',{
-  //   to:'tim',
-  //   text:'安安 你好',
-  //   createAt: new Date().getTime()
-  // })
 
 })
 
@@ -25,7 +34,7 @@ socket.on('newMessage', function(message) {
     createAt: formattedTime
   })
   $('#messages').append(html)
-
+  scrollToBottom()
 })
 
 
@@ -40,16 +49,10 @@ socket.on('newLocationMessage', function(message) {
     createAt: formattedTime
   })
   $('#messages').append(html)
-  // var li = jQuery('<li></li>')
-  // var a = jQuery('<a target="_blank">My current location</a>')
-  // li.text(`${message.from} ${formattedTime}: `)
-  // a.attr('href', message.url)
-  // li.append(a)
-  //
-  // jQuery('#messages').append(li)
+  scrollToBottom()
 })
 
-  var messageTextbox = $('[name=message]')
+var messageTextbox = $('[name=message]')
 
 $('#message-form').on('submit', function(e){
   e.preventDefault()
