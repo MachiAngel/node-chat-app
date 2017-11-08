@@ -49,14 +49,26 @@ io.on('connection', (socket) => {
 
   //server端收到client端給的訊息
   socket.on('createMessage', (message, callback) => {
-    console.log('createMessage from client:',message)
+    //拿到usser
+    var user = users.getUser(socket.id)
 
-    io.emit('newMessage', generateMessage(message.from, message.text))
+    if (user && isRealString(message.text)) {
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text))
+    }
+
+
     callback()
   })
 
   socket.on('createLocationMessage', (coords) => {
-    io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude))
+
+    var user = users.getUser(socket.id)
+
+    if (user) {
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude))
+    }
+
+
   })
 
   //user離開網頁後
@@ -67,7 +79,7 @@ io.on('connection', (socket) => {
       io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has leaved`))
     }
   })
-  
+
 
 
 })
